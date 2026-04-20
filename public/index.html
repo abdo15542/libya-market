@@ -2,76 +2,78 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سوق ليبيا الذكي | المنصة المتكاملة</title>
+    <title>خدمات ليبيا | اطلب خدمة الآن</title>
     <style>
-        :root { --primary: #e74c3c; --dark: #2c3e50; --light: #ecf0f1; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; padding: 0; color: #333; }
-        
-        header { background: linear-gradient(135deg, var(--dark), #34495e); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        header h1 { margin: 0; font-size: 2.2em; }
-        header p { font-size: 1.1em; opacity: 0.9; margin-top: 10px; }
-
-        .container { max-width: 1000px; margin: -30px auto 50px; padding: 0 20px; position: relative; z-index: 10; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        
-        .card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s; cursor: pointer; border: 2px solid transparent; text-decoration: none; color: inherit; display: block; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        
-        .icon { font-size: 3em; margin-bottom: 15px; display: block; }
-        .card h3 { margin: 10px 0; color: var(--dark); }
-        .card p { color: #7f8c8d; font-size: 0.9em; line-height: 1.6; }
-        .btn-enter { display: inline-block; margin-top: 15px; padding: 10px 25px; background: var(--primary); color: white; border-radius: 25px; font-weight: bold; }
-        
-        footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9em; margin-top: 50px; }
+        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #e74c3c; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; }
+        .success { display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>🇱🇾 سوق ليبيا الذكي</h1>
-    <p>منصتك الأولى للتجارة والتوصيل الموثوق بين جميع المدن</p>
-</header>
-
 <div class="container">
-    <div class="grid">
-        <!-- بطاقة المشتري -->
-        <a href="/index.html" class="card">
-            <span class="icon">🛍️</span>
-            <h3>تسوق الآن</h3>
-            <p>تصفح المنتجات واطلب والدفع عند الاستلام.</p>
-            <span class="btn-enter">دخول السوق</span>
-        </a>
+    <h1>🛠️ اطلب خدمة منزلية</h1>
+    <p style="text-align:center; color:#666;">سباكة، كهرباء، توصيل.. نصلك أينما كنت</p>
+    
+    <form id="serviceForm">
+        <div class="form-group">
+            <label>الاسم</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label>رقم الهاتف</label>
+            <input type="tel" id="phone" required>
+        </div>
+        <div class="form-group">
+            <label>الموقع / العنوان</label>
+            <input type="text" id="location" required placeholder="طرابلس، حي الأندلس...">
+        </div>
+        <div class="form-group">
+            <label>نوع الخدمة</label>
+            <select id="serviceType">
+                <option value="سباكة">سباكة</option>
+                <option value="كهرباء">كهرباء</option>
+                <option value="توصيل">توصيل طلبات</option>
+                <option value="تنظيف">تنظيف</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>تفاصيل المشكلة</label>
+            <textarea id="details" rows="3" placeholder="وصف مختصر للمشكلة..."></textarea>
+        </div>
+        <button type="submit">إرسال الطلب 🚀</button>
+    </form>
 
-        <!-- بطاقة البائع -->
-        <a href="/vendor.html" class="card">
-            <span class="icon">🏪</span>
-            <h3>أنت بائع؟</h3>
-            <p>اعرض منتجاتك لآلاف العملاء في كل ليبيا.</p>
-            <span class="btn-enter">لوحة البائع</span>
-        </a>
-
-        <!-- بطاقة السائق -->
-        <a href="/driver.html" class="card">
-            <span class="icon">🚚</span>
-            <h3>انضم كسائق</h3>
-            <p>حقق دخلاً إضافياً بتوصيل الطلبات في طريقك.</p>
-            <span class="btn-enter">بوابة السائق</span>
-        </a>
-
-        <!-- بطاقة الإدارة -->
-        <a href="/admin.html" class="card">
-            <span class="icon">⚙️</span>
-            <h3>الإدارة</h3>
-            <p>لوحة تحكم مركزية لإدارة كل شيء.</p>
-            <span class="btn-enter">دخول الإدارة</span>
-        </a>
+    <div id="successMsg" class="success">
+        ✅ تم استلام طلبك! <br> ستقوم الإدارة بتعيين أقرب مقدم خدمة لك.
     </div>
 </div>
 
-<footer>
-    &copy; 2024 سوق ليبيا الذكي. جميع الحقوق محفوظة.
-</footer>
+<script>
+    document.getElementById('serviceForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = {
+            customer_name: document.getElementById('name').value,
+            customer_phone: document.getElementById('phone').value,
+            location: document.getElementById('location').value,
+            service_type: document.getElementById('serviceType').value,
+            details: document.getElementById('details').value
+        };
 
+        await fetch('/api/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        document.getElementById('serviceForm').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+    });
+</script>
 </body>
 </html>
