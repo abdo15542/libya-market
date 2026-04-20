@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة السائق | مهامي</title>
+    <style>
+        body { font-family: sans-serif; background: #2c3e50; color: white; margin: 0; padding: 10px; }
+        .header { text-align: center; padding: 10px; border-bottom: 1px solid #34495e; margin-bottom: 20px; }
+        .task-card { background: #34495e; padding: 20px; margin-bottom: 15px; border-radius: 10px; border-right: 5px solid #f1c40f; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .task-id { font-weight: bold; color: #f1c40f; }
+        .info-row { margin: 5px 0; font-size: 0.95em; }
+        .btn { display: block; width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-pickup { background: #e67e22; }
+        .btn-deliver { background: #27ae60; }
+        .empty-state { text-align: center; color: #95a5a6; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>🚚 مهامي الحالية</h2>
+    <p>السائق التجريبي (ID: 1)</p>
+</div>
+
+<div id="tasksList"></div>
+
+<script>
+    // في التطبيق الحقيقي، يتم تسجيل الدخول للحصول على ID السائق
+    // هنا نستخدم ID ثابت للتجربة (السائق الأول الذي أضفناه في قاعدة البيانات)
+    const DRIVER_ID = 1; 
+
+    async function loadTasks() {
+        try {
+            const res = await fetch(`/api/driver/orders/${DRIVER_ID}`);
+            const orders = await res.json();
+            const list = document.getElementById('tasksList');
+            
+            if (orders.length === 0) {
+                list.innerHTML = '<div class="empty-state">لا توجد مهام معينة لك حالياً.<br>استرح قليلاً! ☕</div>';
+                return;
+            }
+
+            list.innerHTML = orders.map(o => {
+                let actionButton = '';
+                if (o.status === 'assigned_driver') {
+                    actionButton = `<button class="btn btn-pickup" onclick="updateStatus(${o.id}, 'picked_up')">✅ تم الاستلام من البائع</button>`;
+                } else if (o.status === 'picked_up') {
+                    actionButton = `<button class="btn btn-deliver" onclick="updateStatus(${o.id}, 'delivered')">💰 تم التسليم للعميل (تحصيل)</button>`;
+                }
+
+                return `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <span class="task-id">طلب #${o.id}</span>
+                            <span style="font-size:0.8em; background:#2c3e50; padding:2px 8px; border-radius:4px;">${o.status === 'assigned_driver' ? 'في الانتظار' : 'تم الاستلام'}</span>
+                        </div>
+                        <div class="info-row"><strong>📦 المنتج:</strong> ${o.product_title}</div>
+                        <div class="info-row"><strong>👤 العميل:</strong> ${o.customer_name}</div>
+                        <div class="info-row"><strong>📞 الهاتف:</strong> <a href="tel:${o.customer_phone}" style="color:#3498db">${o.customer_phone}</a></div>
+                        <div class="info-row"><strong>📍 العنوان:</strong> ${o.address} (${o.customer_city})</div>
+                        <div class="info-row"><strong>💵 المبلغ للتحصيل:</strong> ${o.total_price + o.delivery_cost} د.ل</div>
+                        ${actionButton}
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error("Error loading tasks:", error);
+        }
+    }
+
+    async function updateStatus(id, status) {
+        const msg = status === 'picked_up' ? 'هل استلمت الطلب من البائع؟' : 'هل سلمت الطلب واستلمت المال؟';
+        if(!confirm(msg)) return;
+
+        await fetch(`/api/driver/order/${id}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        loadTasks();
+    }
+
+    loadTasks();
+    // تحديث كل 20 ثانية
+    setInterval(loadTasks, 20000);
+</script>
+</body>
+</html>

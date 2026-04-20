@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>الإدارة العليا | سوق ليبيا</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #2c3e50; color: white; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #34495e; padding-bottom: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .section { background: #34495e; padding: 20px; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        h2 { margin-top: 0; color: #ecf0f1; border-right: 5px solid #e74c3c; padding-right: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; color: #333; border-radius: 8px; overflow: hidden; margin-top: 15px; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        th { background: #2c3e50; color: white; }
+        tr:last-child td { border-bottom: none; }
+        
+        .status-badge { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        .pending { background: #f1c40f; color: #333; }
+        .new { background: #3498db; color: white; }
+        
+        .btn-action { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; margin-left: 5px; }
+        .btn-approve { background: #27ae60; }
+        .btn-assign { background: #e67e22; }
+        .refresh-btn { background: #e74c3c; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        
+        select { padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>👮‍♂️ لوحة التحكم المركزية</h1>
+        <button class="refresh-btn" onclick="loadDashboard()">تحديث البيانات 🔄</button>
+    </div>
+
+    <!-- قسم المنتجات المعلقة -->
+    <div class="section">
+        <h2>📦 منتجات بانتظار الموافقة</h2>
+        <table id="pendingProductsTable">
+            <thead>
+                <tr>
+                    <th>البائع</th>
+                    <th>المنتج</th>
+                    <th>السعر</th>
+                    <th>المدينة</th>
+                    <th>الإجراء</th>
+                </tr>            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- قسم الطلبات الجديدة -->
+    <div class="section">
+        <h2>🛒 طلبات جديدة (تحتاج تعيين سائق)</h2>
+        <table id="newOrdersTable">
+            <thead>
+                <tr>
+                    <th>رقم الطلب</th>
+                    <th>العميل & الهاتف</th>
+                    <th>المنتج & المدينة</th>
+                    <th>السعر الكلي</th>
+                    <th>اختيار السائق</th>
+                    <th>تكلفة التوصيل</th>
+                    <th>الإجراء</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    async function loadDashboard() {
+        try {
+            const res = await fetch('/api/admin/dashboard');
+            const data = await res.json();
+
+            // 1. عرض المنتجات المعلقة
+            const prodBody = document.querySelector('#pendingProductsTable tbody');
+            prodBody.innerHTML = '';
+            if (data.pendingProducts.length === 0) {
+                prodBody.innerHTML = '<tr><td colspan="5" style="text-align:center">لا توجد منتجات معلقة</td></tr>';
+            } else {
+                data.pendingProducts.forEach(p => {
+                    prodBody.innerHTML += `
+                        <tr>
+                            <td>${p.vendor_name}</td>
+                            <td>${p.title}</td>
+                            <td>${p.price} د.ل</td>
+                            <td>${p.city}</td>
+                            <td><button class="btn-action btn-approve" onclick="approveProduct(${p.id})">نشر ✅</button></td>
+                        </tr>
+                    `;
+                });
+            }
+            // 2. عرض الطلبات الجديدة
+            const orderBody = document.querySelector('#newOrdersTable tbody');
+            orderBody.innerHTML = '';
+            if (data.newOrders.length === 0) {
+                orderBody.innerHTML = '<tr><td colspan="7" style="text-align:center">لا توجد طلبات جديدة</td></tr>';
+            } else {
+                data.newOrders.forEach(o => {
+                    // إنشاء قائمة السائقين لهذا الطلب
+                    let driversOptions = `<option value="">اختر سائق...</option>`;
+                    data.drivers.forEach(d => {
+                        driversOptions += `<option value="${d.id}">${d.name} (${d.route_from} ⇄ ${d.route_to})</option>`;
+                    });
+
+                    orderBody.innerHTML += `
+                        <tr>
+                            <td>#${o.id}</td>
+                            <td>${o.customer_name}<br><a href="tel:${o.customer_phone}" style="color:#2980b9">${o.customer_phone}</a></td>
+                            <td>${o.product_title}<br><small>من: ${o.vendor_city}</small></td>
+                            <td>${o.total_price} د.ل</td>
+                            <td>
+                                <select id="driver-select-${o.id}">
+                                    ${driversOptions}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" id="cost-input-${o.id}" placeholder="مثلاً 20" style="width:80px; padding:5px;">
+                            </td>
+                            <td>
+                                <button class="btn-action btn-assign" onclick="assignDriver(${o.id})">تعيين 🚚</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        } catch (error) {
+            console.error("Error loading dashboard:", error);
+        }
+    }
+
+    async function approveProduct(id) {
+        if(!confirm('هل أنت متأكد من نشر هذا المنتج؟')) return;
+        await fetch(`/api/admin/product/${id}/approve`, { method: 'PUT' });
+        loadDashboard();
+    }
+
+    async function assignDriver(orderId) {
+        const driverId = document.getElementById(`driver-select-${orderId}`).value;
+        const deliveryCost = document.getElementById(`cost-input-${orderId}`).value;
+
+        if (!driverId) return alert('يجب اختيار سائق أولاً');        if (!deliveryCost) return alert('يجب تحديد تكلفة التوصيل');
+
+        if(!confirm(`تعيين السائق رقم ${driverId} بتكلفة ${deliveryCost} د.ل؟`)) return;
+
+        await fetch(`/api/admin/order/${orderId}/assign`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ driver_id: driverId, delivery_cost: deliveryCost })
+        });
+        loadDashboard();
+    }
+
+    // تحميل البيانات عند الفتح
+    loadDashboard();
+    // تحديث تلقائي كل 15 ثانية
+    setInterval(loadDashboard, 15000);
+</script>
+</body>
+</html>
