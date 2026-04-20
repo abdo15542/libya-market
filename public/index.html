@@ -5,39 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سوق ليبيا الذكي | المنصة المتكاملة</title>
     <style>
-        :root { --primary: #e74c3c; --dark: #2c3e50; --light: #ecf0f1; --success: #27ae60; }
+        :root { --primary: #e74c3c; --dark: #2c3e50; --light: #ecf0f1; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; padding: 0; color: #333; }
         
-        /* Header */
         header { background: linear-gradient(135deg, var(--dark), #34495e); color: white; padding: 40px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        header h1 { margin: 0; font-size: 2.5em; }
-        header p { font-size: 1.2em; opacity: 0.9; margin-top: 10px; }
+        header h1 { margin: 0; font-size: 2.2em; }
+        header p { font-size: 1.1em; opacity: 0.9; margin-top: 10px; }
 
-        /* Container */
         .container { max-width: 1000px; margin: -30px auto 50px; padding: 0 20px; position: relative; z-index: 10; }
-
-        /* Cards Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         
-        .card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border: 2px solid transparent; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s; cursor: pointer; border: 2px solid transparent; text-decoration: none; color: inherit; display: block; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
         
         .icon { font-size: 3em; margin-bottom: 15px; display: block; }
         .card h3 { margin: 10px 0; color: var(--dark); }
         .card p { color: #7f8c8d; font-size: 0.9em; line-height: 1.6; }
-
-        /* Buttons inside cards */
-        .btn-enter { display: inline-block; margin-top: 15px; padding: 10px 25px; background: var(--primary); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; transition: background 0.3s; }
-        .btn-enter:hover { background: #c0392b; }
-
-        /* Footer */
-        footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9em; margin-top: 50px; }
+        .btn-enter { display: inline-block; margin-top: 15px; padding: 10px 25px; background: var(--primary); color: white; border-radius: 25px; font-weight: bold; }
         
-        /* Mobile Adjustments */
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.8em; }
-            .grid { grid-template-columns: 1fr; }
-        }
+        footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9em; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -47,55 +33,45 @@
     <p>منصتك الأولى للتجارة والتوصيل الموثوق بين جميع المدن</p>
 </header>
 
-<div class="container">    <div class="grid">
+<div class="container">
+    <div class="grid">
         <!-- بطاقة المشتري -->
-        <div class="card" onclick="window.location.href='/shop'">
+        <a href="/index.html" class="card">
             <span class="icon">🛍️</span>
             <h3>تسوق الآن</h3>
-            <p>تصفح آلاف المنتجات من بائعين موثوقين في طرابلس، بنغازي، ومصراتة. اطلب والدفع عند الاستلام.</p>
-            <a href="/shop" class="btn-enter">دخول السوق</a>
-        </div>
+            <p>تصفح المنتجات واطلب والدفع عند الاستلام.</p>
+            <span class="btn-enter">دخول السوق</span>
+        </a>
 
         <!-- بطاقة البائع -->
-        <div class="card" onclick="window.location.href='/vendor'">
+        <a href="/vendor.html" class="card">
             <span class="icon">🏪</span>
             <h3>أنت بائع؟</h3>
-            <p>اعرض منتجاتك لآلاف العملاء. نظامنا يوصل طلباتك لأي مدينة في ليبيا بأمان وسرعة.</p>
-            <a href="/vendor" class="btn-enter">لوحة البائع</a>
-        </div>
+            <p>اعرض منتجاتك لآلاف العملاء في كل ليبيا.</p>
+            <span class="btn-enter">لوحة البائع</span>
+        </a>
 
         <!-- بطاقة السائق -->
-        <div class="card" onclick="window.location.href='/driver'">
+        <a href="/driver.html" class="card">
             <span class="icon">🚚</span>
             <h3>انضم كسائق</h3>
-            <p>هل تسافر بين المدن؟ حقق دخلاً إضافياً بتوصيل الطرود والطلبات في طريقك.</p>
-            <a href="/driver" class="btn-enter">بوابة السائق</a>
-        </div>
+            <p>حقق دخلاً إضافياً بتوصيل الطلبات في طريقك.</p>
+            <span class="btn-enter">بوابة السائق</span>
+        </a>
 
         <!-- بطاقة الإدارة -->
-        <div class="card" onclick="window.location.href='/admin'">
+        <a href="/admin.html" class="card">
             <span class="icon">⚙️</span>
             <h3>الإدارة</h3>
-            <p>لوحة تحكم مركزية لإدارة الطلبات، السائقين، والمنتجات. (للمشرفين فقط)</p>
-            <a href="/admin" class="btn-enter">دخول الإدارة</a>
-        </div>
+            <p>لوحة تحكم مركزية لإدارة كل شيء.</p>
+            <span class="btn-enter">دخول الإدارة</span>
+        </a>
     </div>
 </div>
 
 <footer>
-    &copy; 2024 سوق ليبيا الذكي. جميع الحقوق محفوظة. <br>
-    خدمة التوصيل متوفرة لجميع المدن الليبية.
+    &copy; 2024 سوق ليبيا الذكي. جميع الحقوق محفوظة.
 </footer>
 
-<script>
-    // توجيه الروابط المختصرة للصفحات الفعلية
-    document.addEventListener('DOMContentLoaded', () => {
-        const path = window.location.pathname;
-        if (path === '/shop') window.location.href = '/index.html'; // إذا أردت فصل صفحة التسوق لاحقاً
-        if (path === '/vendor') window.location.href = '/vendor.html';
-        if (path === '/driver') window.location.href = '/driver.html';
-        if (path === '/admin') window.location.href = '/admin.html';
-    });
-</script>
 </body>
 </html>
